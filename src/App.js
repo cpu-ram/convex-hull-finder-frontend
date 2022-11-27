@@ -1,42 +1,58 @@
 import logo from './logo.svg';
 import './App.css';
-import {state,useEffect,useState} from 'react';
+import {useEffect,useState} from 'react';
+import './classes/point.js';
 
 function App() {
 
-const [clickCoordinates, setClickCoordinates]=useState({x:-1,y:-1});
-const [boardCoordinates, setBoardCoordinates]=useState({x:-1,y:-1});
+  const [lastClickAbsCoords, setLastClickAbsCoords]=useState({x:-1,y:-1});
+  const [lastClickRelCoords, setLastClickRelCoords]=useState({x:-1, y:-1});
+  const [boardPosition, setBoardPosition]=useState({x:-1, y:-1});
+  const [pointsEntered, setPointsEntered]=useState([]);
 
+  useEffect(()=>{ 
+    function handleClick(e){
+  
+    let enteredClickCoordinates={x:e.pageX, y:e.pageY};
+  
+    let boardRelativeClickCoordinates={
+      x:enteredClickCoordinates.x-boardPosition.left,
+      y:enteredClickCoordinates.y-boardPosition.top
+    }
+    
+    pointsEntered.push(boardRelativeClickCoordinates);
+    setLastClickRelCoords(boardRelativeClickCoordinates);
+    setLastClickAbsCoords(enteredClickCoordinates);
+    }
+  
 
-function handleClick(e){
-  setClickCoordinates({x: e.screenX, y: e.screenY});
-}
+    const board = document.querySelector("#board");
+    const boardPosition = board.getBoundingClientRect();
+    setBoardPosition(boardPosition)
+    board.addEventListener('click',handleClick);
 
-useEffect(()=>{ 
-  const board = document.querySelector("#board");
-  const boardPosition = board.getBoundingClientRect();
-  console.log(JSON.stringify(boardPosition));
-  setBoardCoordinates({x:boardPosition.left, y:boardPosition.top});
-
-  board.addEventListener('click',handleClick);
-  return ()=> document.removeEventListener('click',handleClick);
-},[]);
-
+  },[]);
 
   return (
     <>
-    <svg id="board"  xmlns="http://www.w3.org/2000/svg" width="500px" height="500px">
-      <g fill="white" stroke="black" strokeWidth="5">
-        <rect width="100%" height="100%"/>
-      </g>
-    </svg>
-    <p>
-      Click: x= {clickCoordinates.x}, y= {clickCoordinates.y};
-      <br />
-      Board: x= {boardCoordinates.x}, y= {boardCoordinates.y};
-      <br />
+    <div style={{display:"block",boxSizing:"border-box",width:"530px",height:"530px",
+      margin:"0", paddingTop:"15px", paddingRight:"15px",
+        paddingLeft:"15px", paddingBottom:"15px", outline:"1px solid red"}}>
+
+    <svg id="board"  xmlns="http://www.w3.org/2000/svg" width="500px" height="500px" 
+      style={{display: "block", margin:"0",
+        boxSizing: "content-box", padding:"0", outline:"1px solid blue"}}>
       
+    </svg>
+    </div>
+
+    <p>
+      Last click's relative coords: x= {lastClickRelCoords.x}, y= {lastClickRelCoords.y};
+      <br /><br />
+      {JSON.stringify(pointsEntered)};
+      <br />
     </p>
+
     </>
   );
 }
