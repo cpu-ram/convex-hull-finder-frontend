@@ -3,7 +3,6 @@ import {useEffect,useState} from 'react';
 function DataEntry() {
 
   const [lastClickAbsCoords, setLastClickAbsCoords]=useState({x:-1,y:-1});
-  const [lastClickRelCoords, setLastClickRelCoords]=useState({x:-1, y:-1});
   const [boardPosition, setBoardPosition]=useState({x:-1, y:-1});
   const [pointsEntered, setPointsEntered]=useState([]);
 
@@ -26,7 +25,6 @@ function DataEntry() {
     }
     
     pointsEntered.push(boardRelativeClickCoordinates);
-    setLastClickRelCoords(boardRelativeClickCoordinates);
     setLastClickAbsCoords(enteredAbsClickCoordinates);
     }
   
@@ -36,6 +34,10 @@ function DataEntry() {
     board.addEventListener('click',handleClick);
 
   },[]);
+
+  function FindConvexHull(){
+
+  }
 
   return (
     <>
@@ -53,10 +55,8 @@ function DataEntry() {
     </div>
 
     <p>
-      Last click's relative coords: x= {lastClickRelCoords.x}, y= {lastClickRelCoords.y};
-      <br /><br />
-      {JSON.stringify(pointsEntered)};
-      <br />
+      <button onClick=''>Find Convex Hull</button>
+      <boardPosition></boardPosition>
     </p>
 
     </>
