@@ -3,7 +3,6 @@ import {useEffect,useState} from 'react';
 function DataEntry() {
 
   const [lastClickAbsCoords, setLastClickAbsCoords]=useState({x:-1,y:-1});
-  const [boardPosition, setBoardPosition]=useState({x:-1, y:-1});
   const [pointsEntered, setPointsEntered]=useState([]);
 
   function PointsDisplayed(props){
@@ -17,20 +16,20 @@ function DataEntry() {
   useEffect(()=>{ 
     function handleClick(e){
   
-    let enteredAbsClickCoordinates={x:e.pageX, y:e.pageY};
-  
+    let enteredViewPortCoordinates={x:e.clientX, y:e.clientY};
+    
+    const boardPosition = board.getBoundingClientRect();
+    
     let boardRelativeClickCoordinates={
-      x:enteredAbsClickCoordinates.x-boardPosition.left,
-      y:enteredAbsClickCoordinates.y-boardPosition.top
+      x:enteredViewPortCoordinates.x-boardPosition.left,
+      y:enteredViewPortCoordinates.y-boardPosition.top
     }
     
     pointsEntered.push(boardRelativeClickCoordinates);
-    setLastClickAbsCoords(enteredAbsClickCoordinates);
+    setLastClickAbsCoords(enteredViewPortCoordinates);
     }
   
     const board = document.querySelector("#board");
-    const boardPosition = board.getBoundingClientRect();
-    setBoardPosition(boardPosition)
     board.addEventListener('click',handleClick);
 
   },[]);
@@ -56,7 +55,6 @@ function DataEntry() {
 
     <p>
       <button onClick=''>Find Convex Hull</button>
-      <boardPosition></boardPosition>
     </p>
 
     </>
