@@ -1,8 +1,9 @@
+import { cleanup } from '@testing-library/react';
 import {useEffect,useState} from 'react';
 
 function DataEntry() {
+  
 
-  const [lastClickAbsCoords, setLastClickAbsCoords]=useState({x:-1,y:-1});
   const [pointsEntered, setPointsEntered]=useState([]);
 
   function PointsDisplayed(props){
@@ -24,13 +25,16 @@ function DataEntry() {
       x:enteredViewPortCoordinates.x-boardPosition.left,
       y:enteredViewPortCoordinates.y-boardPosition.top
     }
-    
     pointsEntered.push(boardRelativeClickCoordinates);
-    setLastClickAbsCoords(enteredViewPortCoordinates);
+    console.log(JSON.stringify(pointsEntered));
     }
-  
+
     const board = document.querySelector("#board");
     board.addEventListener('click',handleClick);
+
+    return function cleanup(){
+      board.removeEventListener('click', handleClick);
+    }
 
   },[]);
 
@@ -48,14 +52,11 @@ function DataEntry() {
       style={{display: "block", margin:"0",
         boxSizing: "content-box", padding:"0", outline:"1px solid blue"}}>
       
-      <PointsDisplayed></PointsDisplayed>
+      <PointsDisplayed pointsEntered={pointsEntered}></PointsDisplayed>
 
     </svg>
     </div>
 
-    <p>
-      <button onClick=''>Find Convex Hull</button>
-    </p>
 
     </>
   );
