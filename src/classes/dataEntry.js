@@ -16,8 +16,12 @@ function DataEntry() {
     console.log("e", e);
   
     let enteredViewPortCoordinates={ x: e.clientX, y: e.clientY };
-    let boardPosition=document.querySelector('#board');
-    setPointsEntered([...pointsEntered, enteredViewPortCoordinates]);
+    let boardPosition=document.querySelector('#board').getBoundingClientRect();
+    let boardRelativeClickCoordinates={
+      x: enteredViewPortCoordinates.x-boardPosition.left,
+      y:enteredViewPortCoordinates.y-boardPosition.top
+    }
+    setPointsEntered([...pointsEntered, boardRelativeClickCoordinates]);
     
     // const boardPosition = board.getBoundingClientRect();
     
